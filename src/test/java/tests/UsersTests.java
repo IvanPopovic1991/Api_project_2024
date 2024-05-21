@@ -1,24 +1,79 @@
 package tests;
+
+import Config.Config;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.Constants;
+
 import static io.restassured.RestAssured.given;
 
-public class UsersTests {
+public class UsersTests extends Config {
 
+    @Test
+    public void getAllUsers() {
+        Response response = given()
+                 .when().get(Constants.getAllUsers);
+        Assert.assertEquals(response.getStatusCode(), 200);
+    }
     @Test
     public void getUserByIdTest() {
         Response response = given()
-                .baseUri("https://dummyapi.io/data")
-                .basePath("/v1")
-                .log().all()
-                .header("app-id", "663e187ed6c4841db0c6183f")
-                .log().all()
-                .pathParam("id", "60d0fe4f5311236168a109ca")
+                .pathParam("id", "60d0fe4f5311236168a109de")
                 .when().get(Constants.getUserById);
 
         Assert.assertEquals(response.getStatusCode(), 200);
+        String firstName = response.jsonPath().get("firstName");
+        Assert.assertEquals(firstName,"Bessie");
         response.getBody().print();
+    }
+    @Test
+    public void deleteUserById() {
+
+        String id = "60d0fe4f5311236168a109cf";
+        Response response = given()
+                .pathParam("id", id)
+                .when().delete(Constants.deleteUSerById);
+
+        Assert.assertEquals(response.getStatusCode(), 200);
+        String userId = response.jsonPath().get("id");
+        System.out.println(userId);
+
+        Assert.assertEquals(userId, id);
+
+        given()
+                .pathParam("id", id)
+                .when().delete(Constants.deleteUSerById);
+
+        Assert.assertEquals(response.getStatusCode(), 404);
+    }
+
+    @Test
+    public void createUser() {
+        Response response = given()
+                .body("{\n" +
+                        "    \"firstName\" : \"Testq\",\n" +
+                        "    \"lastName\" : \"Testa\", \n" +
+                        "    \"email\":\"testqtesta29121991@mailinator.com.com\"\n" +
+                        "}")
+                .when().post(Constants.createUser);
+
+        Assert.assertEquals(response.getStatusCode(), 200);
+        response.body().print();
+    }
+
+    @Test
+    public void updateUser(){
+        String id = "60d0fe4f5311236168a109cc";
+        Response response = given()
+                .pathParam("id",id)
+                .body("{\n" +
+                        "    \"firstName\" : \"Updated firstName \",\n" +
+                        "    \"lastName\": \"Updated lastName \"\n" +
+                        "}")
+                .when().put(Constants.updateUser);
+
+        Assert.assertEquals(response.getStatusCode(),200);
+        response.body().print();
     }
 }
