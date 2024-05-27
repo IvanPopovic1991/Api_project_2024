@@ -12,12 +12,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utils.Constants;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-
+import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static io.restassured.parsing.Parser.JSON;
 import static utils.Constants.*;
@@ -32,16 +29,31 @@ public class UsersTests extends Config {
     public void getAllUsers() {
         UserRequest userRequest = UserRequest.createUser();
 
-        UserResponse newUserResponse = given()
+        Map<String, String> map = new HashMap<>();
+        map.put("page","2");
+        map.put("limit","50");
+
+        UserResponse userResponse = given()
                 .body(userRequest)
                 .when().post(createUser).getBody().as(UserResponse.class);
 
-        String id = newUserResponse.getId();
-        System.out.println(id);
+        List<UserResponse> response = given()
+                .queryParams(map)
+                .when().get(getAllUsers).jsonPath().getList("data", UserResponse.class);
 
-        Response response = given()
-                .when().get(getAllUsers);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        String expectedId = userResponse.getId();
+
+        boolean isInTheList = false;
+        for (int i = 0; i < response.size() ; i++) {
+            if (response.get(i).getId().equals(expectedId)){
+                isInTheList = true;
+            }
+        }
+        Assert.assertTrue(isInTheList);
+
+//        Assert.assertEquals(response.getStatusCode(), 200);
+//        String actualFirstName = response.jsonPath(("data[0].firstName");
+//        System.out.println();
     }
     @Test
     public void getUserByIdTest() {
