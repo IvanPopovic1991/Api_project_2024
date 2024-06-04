@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" name="C:/Users/Ivan Popovic/Desktop/Documentation/Api_Automation_Projects/Api-project-2024">
+       <groups>
+           <run>
+               <include name="smoke"/>
+         </run>
+       </groups>
+        <classes>
+            <class name="tests.UsersTests">
+                <methods>
+                    <include name="getAllUsers"/>
+                    <include name="getUserByIdTest"/>
+                    <include name="deleteUserById"/>
+                    <include name="createUserUsingJavaObjectTest"/>
+                    <include name="updateUserUsingJavaObjectTest"/>
+                    <include name="readFromJson"/>
+                </methods>
+            </class>
+            <class name="tests.UsersPostTests"></class>
+        </classes>
+    </test>
+</suite>

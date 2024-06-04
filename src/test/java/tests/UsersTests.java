@@ -1,33 +1,38 @@
 package tests;
 
 import Config.Config;
-import com.github.javafaker.Faker;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import modal.UserLocation;
-import modal.UserRequest;
-import modal.UserResponse;
+import listeners.RetryAnalyzer;
+import listeners.TestListener;
+import org.testng.annotations.Listeners;
+import user.UserService;
+import usermodel.UserRequest;
+import usermodel.UserResponse;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utils.Constants;
+import utils.Utils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static io.restassured.RestAssured.given;
-import static io.restassured.parsing.Parser.JSON;
 import static utils.Constants.*;
+import static utils.Utils.createJsonFile;
 
+@Listeners(TestListener.class)
 public class UsersTests extends Config {
     SoftAssert softAssert;
     @BeforeMethod(alwaysRun = true)
     public void setup() {
         softAssert = new SoftAssert();
     }
-    @Test
+    @Test(description = "Get all users from DB; Expected results: All users are retrieved", groups = "smoke,regresion",
+    retryAnalyzer = RetryAnalyzer.class)
     public void getAllUsers() {
-        UserRequest userRequest = UserRequest.createUser();
+        UserRequest userRequest = UserService.createUserTemplate();
 
         Map<String, String> map = new HashMap<>();
         map.put("page","2");
@@ -58,7 +63,7 @@ public class UsersTests extends Config {
     @Test
     public void getUserByIdTest() {
 
-        UserRequest newUser = UserRequest.createUser();
+        UserRequest newUser = UserService.createUserTemplate();
 
         UserResponse userResponse = given()
                 .body(newUser)
@@ -77,7 +82,7 @@ public class UsersTests extends Config {
     @Test
     public void deleteUserById() {
 
-        UserRequest newUser = UserRequest.createUser();
+        UserRequest newUser = UserService.createUserTemplate();
 
         UserResponse userResponse = given()
                 .body(newUser)
@@ -92,8 +97,8 @@ public class UsersTests extends Config {
         softAssert.assertEquals(newUserResponse.getId(), newUserId);
         softAssert.assertAll();
     }
-//
-//    @Test
+
+//    @Test(enabled = false)
 //    public void createUser() {
 //        Response response = given()
 //                .body("{\n" +
@@ -107,7 +112,7 @@ public class UsersTests extends Config {
 //        response.body().print();
 //    }
 //
-//    @Test
+//    @Test(dependsOnMethods = "createUser")
 //    public void updateUser() {
 //        String id = "60d0fe4f5311236168a109cc";
 //        Response response = given()
@@ -124,7 +129,8 @@ public class UsersTests extends Config {
     @Test
     public void createUserUsingJavaObjectTest() {
 
-        UserRequest userRequest = UserRequest.createUser();
+        UserRequest userRequest = UserService.createUserTemplate();
+        createJsonFile("userRequest",userRequest);
 
         UserResponse userResponse = given()
                 .body(userRequest)
@@ -139,7 +145,7 @@ public class UsersTests extends Config {
     @Test
     public void updateUserUsingJavaObjectTest() {
 
-        UserRequest user = UserRequest.createUser();
+        UserRequest user = UserService.createUserTemplate();
 
         UserResponse userResponse = given()
                 .body(user)
@@ -169,5 +175,10 @@ public class UsersTests extends Config {
         softAssert.assertEquals(updatedUserResponse.getLastName(), user.getLastName());
         softAssert.assertEquals(updatedUserResponse.getLocation().getCity(), updatedCity);
         softAssert.assertAll();
+    }
+    @Test
+    public void readFromJson(){
+        UserResponse userResponse = Utils.getUserFromJson("userRequest");
+        System.out.println(userResponse);
     }
 }
