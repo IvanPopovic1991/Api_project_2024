@@ -21,7 +21,7 @@ public class Config {
         RequestSpecification requestSpecification = new RequestSpecBuilder()
                 .setRelaxedHTTPSValidation()
                 .setBaseUri("https://dummyapi.io/data")
-                .setBasePath("/v1")
+                .setBasePath("/v1/")
                 .addFilter(new RequestLoggingFilter())
                 .addFilter(new ResponseLoggingFilter())
                 .addHeaders(map)

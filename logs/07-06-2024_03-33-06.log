@@ -1,0 +1,14 @@
+2024-06-07 15:33:06.544 [main] INFO  listeners.TestListener - Starting Test MethodcreatePost
+2024-06-07 15:33:08.254 [main] INFO  listeners.TestListener - Test methodcreatePost passed.
+2024-06-07 15:33:08.447 [main] INFO  listeners.TestListener - Starting Test MethoddeletePostById
+2024-06-07 15:33:09.071 [main] INFO  listeners.TestListener - Test methoddeletePostById passed.
+2024-06-07 15:33:09.085 [main] INFO  listeners.TestListener - Starting Test MethodgetList
+2024-06-07 15:33:10.177 [main] INFO  listeners.TestListener - Test methodgetList failed.
+2024-06-07 15:33:10.197 [main] INFO  listeners.TestListener - Starting Test MethodgetListByUser
+2024-06-07 15:33:10.828 [main] INFO  listeners.TestListener - Test methodgetListByUser passed.
+2024-06-07 15:33:10.850 [main] INFO  listeners.TestListener - Starting Test MethodgetPostById
+2024-06-07 15:33:11.452 [main] INFO  listeners.TestListener - Test methodgetPostById passed.
+2024-06-07 15:33:11.480 [main] INFO  listeners.TestListener - Starting Test MethodgetPostsByTag
+2024-06-07 15:33:12.093 [main] INFO  listeners.TestListener - Test methodgetPostsByTag failed.
+2024-06-07 15:33:12.119 [main] INFO  listeners.TestListener - Starting Test MethodupdatePost
+2024-06-07 15:33:12.807 [main] INFO  listeners.TestListener - Test methodupdatePost passed.
